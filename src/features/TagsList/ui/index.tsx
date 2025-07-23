@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { FC, useState } from 'react';
+import { FC, memo, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 import { TCourcesResponse } from '../../../shared/types';
 import { uniqTags } from '../../../shared/lib/uniqTags';
@@ -12,27 +12,36 @@ type TagsList = {
 const TagsList: FC<TagsList> = ({ data }) => {
   const [currentTag, setCurrentTag] = useState<string | undefined>(undefined);
   const navigation = useNavigation();
+  console.log('MyComponent rendered');
 
-  const handleNavigate = (tag: string) => {
-    setCurrentTag(tag);
-    if (data) {
-      navigation.navigate('Courses', { currentFilter: tag });
-    }
-  };
+  const handleNavigate = useCallback(
+    (tag: string) => {
+      setCurrentTag(tag);
+      if (data) {
+        navigation.navigate('Courses', { currentFilter: tag });
+      }
+    },
+    [data, navigation],
+  );
+  const memoTags = useMemo(() => uniqTags(data), [data]);
 
-  const renderItem = ({ item }: { item: string }) => {
-    return (
-      <TagButton
-        isCuurentTag={item === currentTag}
-        item={item}
-        handleNavigate={() => handleNavigate(item)}
-      />
-    );
-  };
+  const renderItem = useCallback(
+    ({ item }: { item: string }) => {
+      return (
+        <TagButton
+          isCuurentTag={item === currentTag}
+          item={item}
+          handleNavigate={() => handleNavigate(item)}
+        />
+      );
+    },
+    [currentTag, handleNavigate],
+  );
+
   return (
     <>
       <FlatList
-        data={uniqTags(data)}
+        data={memoTags}
         keyExtractor={(_, index) => 'currentTags' + index}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
@@ -58,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TagsList;
+export default memo(TagsList);

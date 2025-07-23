@@ -6,6 +6,7 @@ import AllTagsButton from '../../../entities/AllTagsButton/ui';
 import { useFetch } from '../../../shared/hooks/useFetch';
 import { ScreenParamList } from '../../../shared/types';
 import { getDP } from '../../../shared/lib/getDP';
+
 type ProfileScreenRouteProp = RouteProp<ScreenParamList, 'Courses'>;
 
 function CoursesWidget() {

@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet } from 'react-native';
 import { TCourcesResponse } from '../../../shared/types';
-import { FC } from 'react';
+import { FC, memo, useCallback } from 'react';
 import CouseCard from '../../../entities/CourseCard/ui';
 
 type TCourcesList = {
@@ -8,9 +8,13 @@ type TCourcesList = {
 };
 
 const CoursesList: FC<TCourcesList> = ({ courses }) => {
-  const renderCourceItem = ({ item }: { item: TCourcesResponse[0] }) => {
-    return <CouseCard item={item} />;
-  };
+  console.log('CoursesList rendered');
+  const renderCourceItem = useCallback(
+    ({ item }: { item: TCourcesResponse[0] }) => {
+      return <CouseCard item={item} />;
+    },
+    [],
+  );
 
   return (
     <>
@@ -40,4 +44,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CoursesList;
+export default memo(CoursesList);
