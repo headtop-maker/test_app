@@ -12,7 +12,7 @@ type TagsList = {
 const TagsList: FC<TagsList> = ({ data }) => {
   const [currentTag, setCurrentTag] = useState<string | undefined>(undefined);
   const navigation = useNavigation();
-  console.log('MyComponent rendered');
+  console.log('MyComponent rendered', data);
 
   const handleNavigate = useCallback(
     (tag: string) => {

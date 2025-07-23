@@ -6,6 +6,7 @@ import AllTagsButton from '../../../entities/AllTagsButton/ui';
 import { useFetch } from '../../../shared/hooks/useFetch';
 import { ScreenParamList } from '../../../shared/types';
 import { getDP } from '../../../shared/lib/getDP';
+import { useMemo } from 'react';
 
 type ProfileScreenRouteProp = RouteProp<ScreenParamList, 'Courses'>;
 
@@ -14,6 +15,12 @@ function CoursesWidget() {
   const route = useRoute<ProfileScreenRouteProp>();
   const filterTag = route.params?.currentFilter;
   const { data, loading } = useFetch();
+
+  const filterData = useMemo(
+    () =>
+      data && filterTag && data.filter(item => item.tags.includes(filterTag)),
+    [data, filterTag],
+  );
 
   return (
     <View style={styles.container}>
@@ -24,15 +31,7 @@ function CoursesWidget() {
       />
       {loading && <ActivityIndicator size={'large'} />}
 
-      {data && (
-        <CoursesList
-          courses={
-            filterTag
-              ? data.filter(item => item.tags.includes(filterTag))
-              : data
-          }
-        />
-      )}
+      {data && <CoursesList courses={filterData ? filterData : data} />}
     </View>
   );
 }
